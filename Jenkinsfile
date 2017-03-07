@@ -13,12 +13,14 @@ node {
    }
    stage('Assemble') {
       // Run the maven build
-     sh "'${gradleHome}/bin/gradle' -Pproject.ext.stand_type=test ${projectName}:assemble"
+     sh "'${gradleHome}/bin/gradle' -Pstand_type=test ${projectName}:assemble"
    }
    stage('Test') {
-      sh "'${gradleHome}/bin/gradle' -Pproject.ext.stand_type=test ${projectName}:test"
-   }
-   stage('Collect Reports') {
-      junit "${projectName}/build/test-results/test/TEST-*.xml"
+	   	try {
+      		sh "'${gradleHome}/bin/gradle' -Pstand_type=test ${projectName}:test"
+		}
+		finally {
+			junit '**/target/*.xml'
+		}
    }
 }
