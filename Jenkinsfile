@@ -20,7 +20,7 @@ node {
       		sh "'${gradleHome}/bin/gradle' -Pstand_type=test ${projectName}:test"
 		}
 		finally {
-			junit '**/target/*.xml'
+			junit "${projectName}/build/test-results/test/TEST-*.xml"
 		}
    }
 }
