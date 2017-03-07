@@ -11,16 +11,20 @@ node {
 	  // deployment
 	  checkout changelog: true, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployment']], submoduleCfg: [], userRemoteConfigs: [[url: 'story_line2_deployment.github.com:fedor-malyshkin/story_line2_deployment.git']]]
    }
-   stage('Assemble') {
-      // Run the maven build
-     sh "'${gradleHome}/bin/gradle' -Pstand_type=test ${projectName}:assemble"
+   	stage('Assemble') {
+	   	dir(projectName) {
+    	// Run the maven build
+    	sh "'${gradleHome}/bin/gradle' -Pstand_type=test assemble"
+ 		}
    }
    stage('Test') {
+	   dir(projectName) {
 	   	try {
-      		sh "'${gradleHome}/bin/gradle' -Pstand_type=test ${projectName}:test"
+      		sh "'${gradleHome}/bin/gradle' -Pstand_type=test test"
 		}
 		finally {
-			junit "${projectName}/build/test-results/test/TEST-*.xml"
+			junit "build/test-results/test/TEST-*.xml"
+		}
 		}
    }
 }
